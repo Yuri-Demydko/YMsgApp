@@ -1,0 +1,16 @@
+bin/
+obj/
+/packages/
+riderModule.iml
+/_ReSharper.Caches/
+.vs/YMsgApp/xs/UserPrefs.xml
+.vs/YMsgApp/xs/project-cache/YMsgApp-Debug-net6.0-maccatalyst.json
+.vs/YMsgApp/xs/project-cache/YMsgApp-Debug-net6.0-ios.json
+.vs/YMsgApp/xs/project-cache/YMsgApp-Debug-net6.0-android.json
+.vs/YMsgApp/xs/project-cache/AndroidApp1-Debug.json
+.idea/.idea.YMsgApp/.idea/vcs.xml
+.idea/.idea.YMsgApp/.idea/misc.xml
+.idea/.idea.YMsgApp/.idea/indexLayout.xml
+.idea/.idea.YMsgApp/.idea/deploymentTargetDropDown.xml
+.idea/.idea.YMsgApp/.idea/aws.xml
+.DS_Store
