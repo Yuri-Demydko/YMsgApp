@@ -1,4 +1,5 @@
-﻿using YMsgApp.DataServices.Ping;
+﻿using YMsgApp.CacheServices;
+using YMsgApp.DataRestServices.Ping;
 
 namespace YMsgApp;
 
@@ -6,10 +7,12 @@ public partial class MainPage : ContentPage
 {
 
 	private readonly IPingRestService _pingRestService;
+	private readonly MessageSQLiteCacheService _cache;
 
-	public MainPage(IPingRestService pingRestService)
+	public MainPage(IPingRestService pingRestService, MessageSQLiteCacheService cache)
 	{
 		_pingRestService = pingRestService;
+		_cache = cache;
 		InitializeComponent();
 	}
 
@@ -25,7 +28,6 @@ public partial class MainPage : ContentPage
 		Label.Text = $"Ping succeed!\n" +
 		             $"Today: {res?.ResponseObject?.CurrentServerDateTime:u}\n" +
 		             $"Message: {res?.ResponseObject?.Message}";
-
 	}
 }
 

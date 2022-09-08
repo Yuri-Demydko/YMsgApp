@@ -1,6 +1,6 @@
-namespace YMsgApp.Models.DtoModels.ResponseModels;
+namespace YMsgApp.Models.Entities;
 
-public class TokenResponse
+public class Token
 {
     public string? AccessToken { get; set; }
     

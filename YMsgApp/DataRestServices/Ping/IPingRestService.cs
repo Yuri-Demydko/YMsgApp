@@ -1,9 +1,10 @@
 using YMsgApp.Models.DtoModels.ResponseModels;
 using YMsgApp.Models.DtoModels.ResponseModels.Wrappers;
+using YMsgApp.Models.Entities;
 
-namespace YMsgApp.DataServices.Ping;
+namespace YMsgApp.DataRestServices.Ping;
 
 public interface IPingRestService
 {
-    public Task<ResponseWrapper<PingResponse>> PingAsync();
+    public Task<ResponseWrapper<Models.Entities.Ping>> PingAsync();
 }
