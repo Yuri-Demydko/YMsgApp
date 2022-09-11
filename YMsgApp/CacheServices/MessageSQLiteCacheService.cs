@@ -5,7 +5,7 @@ using Z.EntityFramework.Plus;
 
 namespace YMsgApp.CacheServices;
 
-public class MessageSQLiteCacheService:BaseSQLiteCacheService<MessageCache>
+public class MessageSQLiteCacheService: BaseSQLiteCacheService<MessageCache>,ICacheAutoUpdate
 {
     public MessageSQLiteCacheService(CacheDbContext cacheDb) : base(cacheDb)
     {
@@ -22,7 +22,7 @@ public class MessageSQLiteCacheService:BaseSQLiteCacheService<MessageCache>
     }
 
 
-    public override async Task SetAsync()
+    public async Task SetAsync()
     {
         throw new NotImplementedException();
     }

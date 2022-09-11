@@ -1,4 +1,5 @@
 using System.Text.Json;
+using YMsgApp.CacheServices;
 using YMsgApp.Enums;
 using YMsgApp.Models.DtoModels.ResponseModels;
 using YMsgApp.Models.DtoModels.ResponseModels.Wrappers;
@@ -8,7 +9,7 @@ namespace YMsgApp.DataRestServices.Ping;
 
 public class PingRestService:BaseRestService,IPingRestService
 {
-    public PingRestService(string baseAddress, JsonSerializerOptions jsonSerializerOptions = null) : base(baseAddress,"", jsonSerializerOptions)
+    public PingRestService(TokenSQLiteCacheService tokenCache,JsonSerializerOptions jsonSerializerOptions = null) : base("", tokenCache, jsonSerializerOptions)
     {
     }
     public async Task<ResponseWrapper<Models.Entities.Ping>> PingAsync()

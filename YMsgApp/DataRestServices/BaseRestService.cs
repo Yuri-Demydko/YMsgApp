@@ -1,5 +1,7 @@
 using System.Net.Http.Json;
 using System.Text.Json;
+using YMsgApp.CacheServices;
+using YMsgApp.Configurations.SharedConfigurations;
 using YMsgApp.Enums;
 using YMsgApp.Models.DtoModels.ResponseModels.Wrappers;
 
@@ -11,16 +13,18 @@ public abstract class BaseRestService
     protected readonly HttpClient _httpClient;
     protected readonly string _apiAddress;
     protected readonly JsonSerializerOptions _jsonSerializerOptions;
+    protected readonly TokenSQLiteCacheService _tokenSqLiteCache;
 
-    protected BaseRestService(string baseAddress, string apiRouteBase, JsonSerializerOptions jsonSerializerOptions=null)
+    protected BaseRestService(string apiRouteBase, TokenSQLiteCacheService tokenSqLiteCache, JsonSerializerOptions jsonSerializerOptions=null)
     {
-        _baseAddress = baseAddress;
+        _tokenSqLiteCache = tokenSqLiteCache;
+        _baseAddress = SharedConfiguration.BaseApiAddress;
         _jsonSerializerOptions = jsonSerializerOptions??new JsonSerializerOptions()
         {
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
         };
         _httpClient = new HttpClient();
-        _apiAddress = $"{baseAddress}/{apiRouteBase}";
+        _apiAddress = $"{_baseAddress}/{apiRouteBase}";
     }
 
     protected async Task<NoContentResponseWrapper> WrapRequestMethod(string endpointName,
@@ -70,6 +74,17 @@ public abstract class BaseRestService
 
         try
         {
+            var token = await _tokenSqLiteCache.GetLastAsync();
+            if(token?.AccessToken!=null)
+            {
+                _httpClient.DefaultRequestHeaders.Remove("Authorization");
+                _httpClient.DefaultRequestHeaders.Add("Authorization",$"Bearer {token.AccessToken}");
+            }
+
+            if (!_httpClient.DefaultRequestHeaders.Contains("User-Agent"))
+            {
+                _httpClient.DefaultRequestHeaders.Add("User-Agent","dotnet");
+            }
             HttpResponseMessage responseMessage;
             var requestParamsString = string.Empty;
             if (requestParams.Any())

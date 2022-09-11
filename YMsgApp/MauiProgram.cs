@@ -1,8 +1,18 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Configuration;
+using YMsgApp.AuthServices;
+using YMsgApp.Background;
 using YMsgApp.CacheServices;
 using YMsgApp.Configurations;
+using YMsgApp.Configurations.SharedConfigurations;
+using YMsgApp.DataRestServices.Auth;
 using YMsgApp.DataRestServices.Ping;
+using YMsgApp.DataRestServices.Profile;
+using YMsgApp.Models.Caching.CacheModels;
+using YMsgApp.Models.DtoModels.RequestModels;
+using YMsgApp.Models.Entities;
+
 
 namespace YMsgApp;
 
@@ -26,17 +36,51 @@ public static class MauiProgram
 			.AddJsonStream(stream)
 			.Build();
 
-
-		builder.Configuration.AddConfiguration(config);
 		
-		builder.Services.ConfigureSQLiteCache(config);
+		//add configs
+		builder.Configuration.AddConfiguration(config);
 
+		SharedConfiguration.BaseApiAddress = builder.Configuration.GetValue<string>("Api:BaseApiAddress");
+		
+		SharedConfiguration.DatabaseVersion = builder.Configuration.GetValue<string>("Database:Version");
+
+		var serviceProvider = builder.Services.BuildServiceProvider();
+		BackgroundTaskExecutor.ConfigureServiceProvider(serviceProvider);
+		
+		//Add services
+		builder.Services.ConfigureSQLiteCache(config);
+		
+		builder.Services.AddSingleton<IPingRestService,PingRestService>();
+		
 		builder.Services.AddScoped<MessageSQLiteCacheService>();
 
-		builder.Services.AddSingleton<IPingRestService>(new PingRestService("https://ymessage.space"));
+		builder.Services.AddScoped<IAuthRestService, AuthRestService>();
 
-		builder.Services.AddSingleton<MainPage>();
+		builder.Services.AddScoped<AuthService>();
 		
+		builder.Services.AddScoped<ProfileRestService>();
+
+		builder.Services.AddScoped<ProfileCacheService>();
+		
+		builder.Services.AddScoped<TokenSQLiteCacheService>();
+
+		builder.Services.AddAutoMapper(mapperConf =>
+		{
+			mapperConf.CreateMap<UserCache, User>()
+				.ForMember(r => r.Id, opt => opt.MapFrom(r => r.ExternalId));
+
+		});
+		
+		//Add pages
+		builder.Services.AddScoped<MainPage>();
+
+		
+
+		builder.Services.AddTransient<LoginPage>();
+
+		//start tasks
+		BackgroundTaskExecutor.Execute<AuthService>("RefreshTokenJob", TimeSpan.FromSeconds(30));
+
 		return builder.Build();
 	}
 }

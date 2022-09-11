@@ -10,6 +10,12 @@ public class TokenSQLiteCacheService:BaseSQLiteCacheService<TokenCache>
     {
     }
 
+    public async Task<TokenCache> GetLastAsync()
+    {
+        return await _cacheDb.TokenCaches.OrderByDescending(r=>r.RefreshExpiryTime).FirstOrDefaultAsync();
+    }
+    
+
     public override async Task<List<TokenCache>> GetAsync()
     {
         return await _cacheDb.TokenCaches.ToListAsync();
@@ -19,11 +25,7 @@ public class TokenSQLiteCacheService:BaseSQLiteCacheService<TokenCache>
     {
         return await _cacheDb.TokenCaches.FirstOrDefaultAsync(r => r.Id == key);
     }
-
-    public override Task SetAsync()
-    {
-        throw new NotImplementedException();
-    }
+    
 
     public override async Task SetAsync(TokenCache obj)
     {

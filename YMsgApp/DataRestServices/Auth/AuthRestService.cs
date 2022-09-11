@@ -1,4 +1,5 @@
 using System.Text.Json;
+using YMsgApp.CacheServices;
 using YMsgApp.Enums;
 using YMsgApp.Models.DtoModels.RequestModels;
 using YMsgApp.Models.DtoModels.ResponseModels;
@@ -9,7 +10,7 @@ namespace YMsgApp.DataRestServices.Auth;
 
 public class AuthRestService:BaseRestService, IAuthRestService
 {
-    public AuthRestService(string baseAddress, JsonSerializerOptions jsonSerializerOptions = null) : base(baseAddress, "auth", jsonSerializerOptions)
+    public AuthRestService(TokenSQLiteCacheService tokenCache,JsonSerializerOptions jsonSerializerOptions = null) : base("auth", tokenCache,jsonSerializerOptions)
     {
     }
 

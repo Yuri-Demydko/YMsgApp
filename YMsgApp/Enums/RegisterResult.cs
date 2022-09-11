@@ -1,9 +1,8 @@
 namespace YMsgApp.Enums;
 
-public enum LoginResult
+public enum RegisterResult
 {
     Success,
-    WrongData,
-    NotExist,
+    AlreadyExist,
     ConnectionError
 }

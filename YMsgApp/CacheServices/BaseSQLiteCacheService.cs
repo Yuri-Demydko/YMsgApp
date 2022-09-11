@@ -15,9 +15,7 @@ public abstract class BaseSQLiteCacheService<T> where T : class
     public abstract Task<List<T>> GetAsync();
     
     public abstract Task<T> GetAsync(int key);
-    
-    public abstract Task SetAsync();
-    
+
     public abstract Task SetAsync(T obj);
 
     public abstract Task RemoveAsync();

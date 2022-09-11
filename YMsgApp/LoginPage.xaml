@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="YMsgApp.LoginPage"
+             Loaded="LoginPage_OnLoaded"
+>
+
+    <ScrollView>
+        <VerticalStackLayout
+            Spacing="25"
+            Padding="30,0"
+            VerticalOptions="Center">
+            
+            <Label
+                Text="Login to YMsg Account"
+                SemanticProperties.HeadingLevel="Level1"
+                SemanticProperties.Description="Login to YMsg Account"
+                FontSize="24"
+                HorizontalOptions="Center"
+                />
+            <Label Text="" 
+                   SemanticProperties.HeadingLevel="Level4"
+                   TextColor="Red"
+                   FontSize="14"
+                   x:Name="ValidationErrorsLabel"
+                   HorizontalOptions="Center"
+                   HorizontalTextAlignment="Start"
+                   VerticalTextAlignment="Center"
+            />
+            <Entry SemanticProperties.Description="Enter UserName" 
+                   x:Name="UsernameEntry"
+                   Placeholder="Username"
+                   TextChanged="LoginData_OnTextChanged"
+                   FontSize="16"/>
+            
+           <Border Stroke="Transparent"
+                   x:Name="PasswordBorder">
+            <Entry SemanticProperties.Description="Enter Password" 
+                   x:Name="PasswordEntry"
+                   Placeholder="Password"
+                   TextChanged="LoginData_OnTextChanged"
+                   IsPassword="True"
+                   FontSize="16"
+                   Opacity="1.0"
+                   />
+            </Border>
+            <Button
+                x:Name="LoginBtn"
+                Text="Login"
+                IsEnabled="False"
+                SemanticProperties.Hint="Login"
+                Clicked="LoginBtn_OnClicked"
+                HorizontalOptions="Center" />
+
+            <Label Text="Don't have an account?" 
+             SemanticProperties.HeadingLevel="Level4"
+             FontSize="14"
+             x:Name="RegistrationRedirectLabel"
+             HorizontalOptions="Center"
+             HorizontalTextAlignment="Start"
+             VerticalTextAlignment="Center"
+            />
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>

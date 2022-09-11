@@ -1,4 +1,5 @@
 using System.Text.Json;
+using YMsgApp.CacheServices;
 using YMsgApp.Enums;
 using YMsgApp.Helpers.HelperModels;
 using YMsgApp.Models.DtoModels.RequestModels;
@@ -7,9 +8,9 @@ using YMsgApp.Models.Entities;
 
 namespace YMsgApp.DataRestServices.Messages;
 
-public class MessageDataRestService:BaseRestService
+public class MessageRestService:BaseRestService,IMessageRestService
 {
-    public MessageDataRestService(string baseAddress, JsonSerializerOptions jsonSerializerOptions = null) : base(baseAddress, "api", jsonSerializerOptions)
+    public MessageRestService(TokenSQLiteCacheService tokenCache, JsonSerializerOptions jsonSerializerOptions = null) : base("api",tokenCache , jsonSerializerOptions)
     {
     }
     

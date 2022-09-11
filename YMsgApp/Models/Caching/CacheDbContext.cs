@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using YMsgApp.Configurations;
 using YMsgApp.Models.Caching.CacheModels;
 
 namespace YMsgApp.Models.Caching;
@@ -16,23 +17,25 @@ public class CacheDbContext : DbContext
     public DbSet<TokenCache> TokenCaches { get; set; }
 
     public DbSet<MessageCache> MessageCaches { get; set; }
-
-    public CacheDbContext()
-    {
-        SQLitePCL.Batteries_V2.Init();
-    }
+    
+    public DbSet<UserCache> UserCaches { get; set; }
+    
 
     public CacheDbContext(DbContextOptions options) : base(options)
     {
         SQLitePCL.Batteries_V2.Init();
-         Database.EnsureCreated();
+
+        Database.EnsureCreated();
     }
+    
     
     protected override async void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<TokenCache>().HasKey(r => r.Id);
 
         builder.Entity<MessageCache>().HasKey(r => r.Id);
+
+        builder.Entity<UserCache>().HasKey(r => r.Id);
         
 
         base.OnModelCreating(builder);
