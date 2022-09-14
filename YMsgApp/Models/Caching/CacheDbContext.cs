@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using YMsgApp.Configurations;
 using YMsgApp.Models.Caching.CacheModels;
+using YMsgApp.Models.Caching.CacheModels.MessageCache;
 
 namespace YMsgApp.Models.Caching;
 

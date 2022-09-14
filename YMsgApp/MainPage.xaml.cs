@@ -1,10 +1,12 @@
 ﻿using AutoMapper;
 using Microsoft.Maui.LifecycleEvents;
+using YMsgApp.Background;
 using YMsgApp.CacheServices;
 using YMsgApp.Configurations;
 using YMsgApp.Configurations.SharedConfigurations;
 using YMsgApp.DataRestServices.Ping;
 using YMsgApp.Models.Caching.CacheModels;
+using YMsgApp.Models.Caching.CacheModels.MessageCache;
 using YMsgApp.Models.Entities;
 
 namespace YMsgApp;
@@ -70,6 +72,21 @@ public partial class MainPage : ContentPage
 		}
 
 		UserProfile = _mapper.Map<User>(profileCache);
+
+		BackgroundTaskExecutor.Execute<MessageSQLiteCacheService>("SetAsync", TimeSpan.FromSeconds(5));
+
+		var dialogues = _messageCache.GetAsDialogues();
+		dialogues=dialogues.Select(r=>new DialogueCache()
+		{
+			LastMessage = r.LastMessage,
+			ParticipantsExternalIds = r.ParticipantsExternalIds.First(f=>f==profileCache.);
+		})
+		
+		
+		MessagesCollectionView.ItemsSource ??= await _messageCache.GetAsync();
+		
+		
+		
 	}
 }
 

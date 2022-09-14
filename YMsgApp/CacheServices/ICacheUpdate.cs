@@ -1,6 +1,6 @@
 namespace YMsgApp.CacheServices;
 
-public interface ICacheAutoUpdate
+public interface ICacheUpdate
 {
     public Task SetAsync();
 }

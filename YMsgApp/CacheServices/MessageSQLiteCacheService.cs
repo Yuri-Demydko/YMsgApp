@@ -1,14 +1,23 @@
+using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using YMsgApp.DataRestServices.Messages;
 using YMsgApp.Models.Caching;
 using YMsgApp.Models.Caching.CacheModels;
+using YMsgApp.Models.Caching.CacheModels.MessageCache;
 using Z.EntityFramework.Plus;
 
 namespace YMsgApp.CacheServices;
 
-public class MessageSQLiteCacheService: BaseSQLiteCacheService<MessageCache>,ICacheAutoUpdate
+public class MessageSQLiteCacheService : BaseSQLiteCacheService<MessageCache>, ICacheUpdate
 {
-    public MessageSQLiteCacheService(CacheDbContext cacheDb) : base(cacheDb)
+    private readonly IMessageRestService _messageRestService;
+    private readonly IMapper _mapper;
+
+    public MessageSQLiteCacheService(CacheDbContext cacheDb, IMessageRestService messageRestService, IMapper mapper) :
+        base(cacheDb)
     {
+        _messageRestService = messageRestService;
+        _mapper = mapper;
     }
 
     public override async Task<List<MessageCache>> GetAsync()
@@ -21,10 +30,40 @@ public class MessageSQLiteCacheService: BaseSQLiteCacheService<MessageCache>,ICa
         return await _cacheDb.MessageCaches.FirstOrDefaultAsync(r => r.Id == key);
     }
 
+    public IAsyncEnumerable<MessageCache> GetAsAsyncEnumerable()
+    {
+        return _cacheDb.MessageCaches.AsAsyncEnumerable();
+    }
 
     public async Task SetAsync()
     {
-        throw new NotImplementedException();
+        var response = await _messageRestService.GetAsync();
+
+        if (response.IsSuccess && response.ResponseObject?.Value?.Count>0)
+        {
+            _cacheDb.MessageCaches.RemoveRange(_cacheDb.MessageCaches);
+            
+            var items = _mapper.Map<List<MessageCache>>(response.ResponseObject.Value);
+
+            await _cacheDb.MessageCaches.AddRangeAsync(items);
+
+            await _cacheDb.SaveChangesAsync();
+        }
+    }
+
+    public List<DialogueCache> GetAsDialogues()
+    {
+       return  _cacheDb.MessageCaches.ToList()
+            .GroupBy(r => new
+            {
+                Key = new string[]{r.UserFromExternalId,r.UserToExternalId}.OrderBy(f=>f)
+            })
+            .Select(r => new DialogueCache()
+            {
+                ParticipantsExternalIds = r.Key.Key.ToList(),
+                LastMessage=r.OrderByDescending(r=>r.CreatedAt).First()
+            }).ToList();
+        
     }
 
     public override async Task SetAsync(MessageCache obj)
@@ -35,7 +74,7 @@ public class MessageSQLiteCacheService: BaseSQLiteCacheService<MessageCache>,ICa
 
     public override async Task RemoveAsync()
     {
-        await _cacheDb.MessageCaches.ForEachAsync(r=> _cacheDb.MessageCaches.Remove(r));
+        await _cacheDb.MessageCaches.ForEachAsync(r => _cacheDb.MessageCaches.Remove(r));
 
         await _cacheDb.SaveChangesAsync();
     }

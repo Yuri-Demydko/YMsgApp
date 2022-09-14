@@ -14,12 +14,11 @@ public class MessageRestService:BaseRestService,IMessageRestService
     {
     }
     
-    public async Task<ResponseWrapper<List<Message>>> GetAsync()
+    public async Task<ResponseWrapper<ODataObjectWrapper<Message>>> GetAsync()
     {
         var oDataQueryParams = new ODataQueryParams()
-            .AddExpand("UserTo(select=id,username,displayName)")
-            .AddExpand("UserFrom(select=id,username,displayName)")
+            .AddExpand("UserTo(select=id,username,displayName),UserFrom(select=id,username,displayName)")
             .Compile();
-        return await WrapRequestMethod<List<Message>>("Messages", RequestType.Get,oDataQueryParams);
+        return await WrapRequestMethod<ODataObjectWrapper<Message>>("Messages", RequestType.Get,oDataQueryParams);
     }
 }

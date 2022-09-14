@@ -5,5 +5,5 @@ namespace YMsgApp.DataRestServices.Messages;
 
 public interface IMessageRestService
 {
-    public Task<ResponseWrapper<List<Message>>> GetAsync();
+    public Task<ResponseWrapper<ODataObjectWrapper<Message>>> GetAsync();
 }

@@ -22,16 +22,36 @@
     </Shell.TitleView>
     <ScrollView>
         <VerticalStackLayout
-            Spacing="25"
-            Padding="30,0"
-            VerticalOptions="Center">
+            Spacing="0"
+            Padding="0"
+            VerticalOptions="Start">
             
-
-            <Label
-                Text="Hello, World!"
-                SemanticProperties.HeadingLevel="Level1"
-                FontSize="32"
-                HorizontalOptions="Center" />
+            <CollectionView x:Name="MessagesCollectionView"
+                            SelectionMode="Single">
+                <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Border
+                        BackgroundColor="LightGray"
+                        Padding="15"
+                        Margin="0"
+                        StrokeThickness="1"
+                        Stroke="Transparent">
+                    <VerticalStackLayout>
+                        <Label Text="{Binding UserFromDisplayName}" 
+                               FontSize="16"
+                               FontAttributes="Bold"/>
+                            <Label Text="{Binding LastMessageText}" FontSize="14"/>  
+                          
+                    </VerticalStackLayout>
+                    </Border>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+                </CollectionView>
+            <!-- <Label -->
+            <!--     Text="Hello, World!" -->
+            <!--     SemanticProperties.HeadingLevel="Level1" -->
+            <!--     FontSize="32" -->
+            <!--     HorizontalOptions="Center" /> -->
             
         </VerticalStackLayout>
     </ScrollView>

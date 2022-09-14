@@ -8,6 +8,8 @@ public class ODataQueryParams
 
     private int? Skip { get; set; }
 
+    private bool Count { get; set; } = false;
+
     private string[]? Select { get; set; }
 
     private string[]? Expand { get; set; }
@@ -17,6 +19,13 @@ public class ODataQueryParams
     public ODataQueryParams()
     {
         
+    }
+
+    public ODataQueryParams AddCount()
+    {
+        if(Count) throw new InvalidOperationException("Count parameter already set");
+        Count = true;
+        return this;
     }
 
     public ODataQueryParams AddTop(int value)
@@ -74,17 +83,22 @@ public class ODataQueryParams
         
         if (Select != null)
         {
-            res.Add(("$select",Select.ToString()));
+            res.Add(("$select",string.Join(",",Select)));
         }
         
         if (Expand != null)
         {
-            res.Add(("$expand",Expand.ToString()));
+            res.Add(("$expand",string.Join(",",Expand)));
         }
         
         if (Filter != null)
         {
-            res.Add(("$filter",Filter.ToString()));
+            res.Add(("$filter",string.Join(",",Filter)));
+        }
+        
+        if (Count)
+        {
+            res.Add(("$count","true"));
         }
 
         return res.ToArray();

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace YMsgApp.Models.Caching.CacheModels;
+namespace YMsgApp.Models.Caching.CacheModels.MessageCache;
 
 public class MessageCache
 {
@@ -12,6 +12,8 @@ public class MessageCache
     public string CreatedAt { get; set; }
 
     public string Text { get; set; }
+    
+    public string ShortenedText { get; set; }
 
     public string UserFromExternalId { get; set; }
     
